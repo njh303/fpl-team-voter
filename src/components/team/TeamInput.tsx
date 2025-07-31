@@ -66,12 +66,20 @@ const mockPlayerDatabase = [
   { id: 73, name: "Haaland", team: "WOL", position: "FWD", price: 14.0 },
 ];
 
+interface TeamSubmission {
+  players: any[];
+  captain: number;
+  viceCaptain?: number;
+}
+
 interface TeamInputProps {
-  onTeamSubmit: (team: any[]) => void;
+  onTeamSubmit: (team: TeamSubmission) => void;
 }
 
 export const TeamInput = ({ onTeamSubmit }: TeamInputProps) => {
   const [selectedTeam, setSelectedTeam] = useState<any[]>([]);
+  const [captain, setCaptain] = useState<number | null>(null);
+  const [viceCaptain, setViceCaptain] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [budget, setBudget] = useState(100.0);
 
@@ -144,8 +152,13 @@ export const TeamInput = ({ onTeamSubmit }: TeamInputProps) => {
   };
 
   const handleSubmitTeam = () => {
-    if (selectedTeam.length === 15) {
-      onTeamSubmit(selectedTeam);
+    if (selectedTeam.length === 15 && captain) {
+      const teamWithCaptain = {
+        players: selectedTeam,
+        captain,
+        viceCaptain
+      };
+      onTeamSubmit(teamWithCaptain);
     }
   };
 
@@ -267,11 +280,60 @@ export const TeamInput = ({ onTeamSubmit }: TeamInputProps) => {
           
           {selectedTeam.length === 15 && (
             <Card>
-              <CardContent className="pt-6">
+              <CardHeader>
+                <CardTitle>Select Captain & Vice-Captain</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Captain (Double Points)</Label>
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {selectedTeam.map(player => (
+                        <div key={player.id} className="flex items-center space-x-2">
+                          <input
+                            type="radio"
+                            id={`captain-${player.id}`}
+                            name="captain"
+                            value={player.id}
+                            checked={captain === player.id}
+                            onChange={() => setCaptain(player.id)}
+                            className="w-4 h-4"
+                          />
+                          <label htmlFor={`captain-${player.id}`} className="text-sm cursor-pointer">
+                            {player.name} ({player.team})
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Vice-Captain</Label>
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {selectedTeam.filter(p => p.id !== captain).map(player => (
+                        <div key={player.id} className="flex items-center space-x-2">
+                          <input
+                            type="radio"
+                            id={`vice-${player.id}`}
+                            name="vice-captain"
+                            value={player.id}
+                            checked={viceCaptain === player.id}
+                            onChange={() => setViceCaptain(player.id)}
+                            className="w-4 h-4"
+                          />
+                          <label htmlFor={`vice-${player.id}`} className="text-sm cursor-pointer">
+                            {player.name} ({player.team})
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
                 <Button 
                   onClick={handleSubmitTeam}
                   className="w-full"
                   size="lg"
+                  disabled={!captain}
                 >
                   Submit My Team to Community Pool
                 </Button>

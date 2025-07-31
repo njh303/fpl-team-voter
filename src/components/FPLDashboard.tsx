@@ -4,15 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TeamInput } from "./team/TeamInput";
-import { PopularPicks } from "./community/PopularPicks";
+import { EnhancedCommunityDisplay } from "./community/EnhancedCommunityDisplay";
 import { TeamConstraints } from "./team/TeamConstraints";
+
+interface TeamSubmission {
+  players: any[];
+  captain: number;
+  viceCaptain?: number;
+}
 
 export const FPLDashboard = () => {
   const [currentGameweek] = useState(1);
-  const [submittedTeams, setSubmittedTeams] = useState<any[][]>([]);
+  const [submittedTeams, setSubmittedTeams] = useState<TeamSubmission[]>([]);
   const [hasSubmittedTeam, setHasSubmittedTeam] = useState(false);
 
-  const handleTeamSubmit = (team: any[]) => {
+  const handleTeamSubmit = (team: TeamSubmission) => {
     setSubmittedTeams([...submittedTeams, team]);
     setHasSubmittedTeam(true);
   };
@@ -62,7 +68,7 @@ export const FPLDashboard = () => {
           </TabsContent>
 
           <TabsContent value="popular" className="space-y-6">
-            <PopularPicks submittedTeams={submittedTeams} />
+            <EnhancedCommunityDisplay submittedTeams={submittedTeams} />
           </TabsContent>
         </Tabs>
       </div>
