@@ -9,14 +9,14 @@ export class ImageProcessor {
         // Use TrOCR for text recognition from images
         this.ocrPipeline = await pipeline(
           "image-to-text",
-          "Xenova/trocr-base-printed",
+          "onnx-community/trocr-base-printed",
           { device: "webgpu" }
         );
       } catch (error) {
         console.warn("WebGPU not available, falling back to CPU");
         this.ocrPipeline = await pipeline(
           "image-to-text",
-          "Xenova/trocr-base-printed"
+          "onnx-community/trocr-base-printed"
         );
       }
     }
