@@ -9,7 +9,7 @@ import { ImageUpload } from "./ImageUpload";
 import { TeamConstraints } from "./TeamConstraints";
 import { Search, Plus, Upload, Edit3 } from "lucide-react";
 
-// Expanded mock player database
+// Expanded mock player database with real FPL players
 const mockPlayerDatabase = [
   // Goalkeepers
   { id: 1, name: "Alisson", team: "LIV", position: "GKP", price: 5.5 },
@@ -17,6 +17,8 @@ const mockPlayerDatabase = [
   { id: 3, name: "Ramsdale", team: "ARS", position: "GKP", price: 4.5 },
   { id: 4, name: "Pope", team: "NEW", position: "GKP", price: 5.0 },
   { id: 5, name: "Pickford", team: "EVE", position: "GKP", price: 4.5 },
+  { id: 60, name: "Henderson", team: "CHE", position: "GKP", price: 4.0 },
+  { id: 61, name: "Vicario", team: "BUR", position: "GKP", price: 4.5 },
   
   // Defenders
   { id: 6, name: "Virgil van Dijk", team: "LIV", position: "DEF", price: 6.5 },
@@ -29,6 +31,11 @@ const mockPlayerDatabase = [
   { id: 13, name: "Gabriel", team: "ARS", position: "DEF", price: 5.0 },
   { id: 14, name: "Sven Botman", team: "NEW", position: "DEF", price: 4.5 },
   { id: 15, name: "Ben Chilwell", team: "CHE", position: "DEF", price: 5.0 },
+  { id: 62, name: "A.Murphy", team: "AVL", position: "DEF", price: 4.5 },
+  { id: 63, name: "Bogarde", team: "NEW", position: "DEF", price: 4.5 },
+  { id: 64, name: "Gusto", team: "CRY", position: "DEF", price: 5.0 },
+  { id: 65, name: "Ballard", team: "WHU", position: "DEF", price: 4.5 },
+  { id: 66, name: "Gvardiol", team: "WOL", position: "DEF", price: 5.5 },
   
   // Midfielders
   { id: 16, name: "Mohamed Salah", team: "LIV", position: "MID", price: 12.5 },
@@ -41,6 +48,10 @@ const mockPlayerDatabase = [
   { id: 23, name: "Martin Odegaard", team: "ARS", position: "MID", price: 8.5 },
   { id: 24, name: "Marcus Rashford", team: "MUN", position: "MID", price: 8.5 },
   { id: 25, name: "James Maddison", team: "TOT", position: "MID", price: 8.0 },
+  { id: 67, name: "Moorhouse", team: "ARS", position: "MID", price: 5.0 },
+  { id: 68, name: "Ødegaard", team: "MUN", position: "MID", price: 8.5 },
+  { id: 69, name: "Nkunku", team: "CRY", position: "MID", price: 7.5 },
+  { id: 70, name: "Martinelli", team: "MUN", position: "MID", price: 6.5 },
   
   // Forwards
   { id: 26, name: "Erling Haaland", team: "MCI", position: "FWD", price: 14.0 },
@@ -50,6 +61,9 @@ const mockPlayerDatabase = [
   { id: 30, name: "Ivan Toney", team: "BRE", position: "FWD", price: 7.5 },
   { id: 31, name: "Ollie Watkins", team: "AVL", position: "FWD", price: 9.0 },
   { id: 32, name: "Dominic Solanke", team: "BOU", position: "FWD", price: 7.5 },
+  { id: 71, name: "Bamford", team: "EVE", position: "FWD", price: 6.5 },
+  { id: 72, name: "Højlund", team: "ARS", position: "FWD", price: 8.0 },
+  { id: 73, name: "Haaland", team: "WOL", position: "FWD", price: 14.0 },
 ];
 
 interface TeamInputProps {
