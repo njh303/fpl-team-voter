@@ -6,18 +6,26 @@ export class ImageProcessor {
   static async initializeOCR() {
     if (!this.ocrPipeline) {
       try {
+        console.log("Initializing OCR with WebGPU...");
         // Use TrOCR for text recognition from images
         this.ocrPipeline = await pipeline(
           "image-to-text",
           "onnx-community/trocr-base-printed",
           { device: "webgpu" }
         );
+        console.log("OCR initialized with WebGPU successfully");
       } catch (error) {
-        console.warn("WebGPU not available, falling back to CPU");
-        this.ocrPipeline = await pipeline(
-          "image-to-text",
-          "onnx-community/trocr-base-printed"
-        );
+        console.warn("WebGPU not available, falling back to CPU:", error);
+        try {
+          this.ocrPipeline = await pipeline(
+            "image-to-text",
+            "onnx-community/trocr-base-printed"
+          );
+          console.log("OCR initialized with CPU successfully");
+        } catch (cpuError) {
+          console.error("Failed to initialize OCR with CPU:", cpuError);
+          throw cpuError;
+        }
       }
     }
     return this.ocrPipeline;
@@ -25,12 +33,15 @@ export class ImageProcessor {
 
   static async extractTextFromImage(imageFile: File): Promise<string> {
     try {
+      console.log("Starting OCR for file:", imageFile.name, "Size:", imageFile.size);
       const ocr = await this.initializeOCR();
+      console.log("OCR pipeline initialized successfully");
       const result = await ocr(imageFile);
       console.log("OCR raw result:", result);
       return result.generated_text || "";
     } catch (error) {
       console.error("Error extracting text from image:", error);
+      console.error("Error details:", error instanceof Error ? error.message : error);
       return "";
     }
   }
