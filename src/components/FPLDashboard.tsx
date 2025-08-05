@@ -44,6 +44,13 @@ export const FPLDashboard = () => {
     toast.success("Team submitted successfully!");
   };
 
+  const handleReset = () => {
+    const submissionKey = `gw_${CURRENT_GAMEWEEK}_submitted`;
+    localStorage.removeItem(submissionKey);
+    setHasSubmittedThisGameweek(false);
+    toast.success("Reset successful! You can now resubmit your team.");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-hero">
       <div className="container mx-auto p-6 space-y-6">
@@ -89,7 +96,10 @@ export const FPLDashboard = () => {
                 {hasSubmittedThisGameweek ? (
                   <div className="text-center py-8">
                     <p className="text-lg font-medium mb-2">Team submission complete!</p>
-                    <p className="text-muted-foreground">Check out the community selections in the Popular Picks tab or wait for the next gameweek.</p>
+                    <p className="text-muted-foreground mb-4">Check out the community selections in the Popular Picks tab or wait for the next gameweek.</p>
+                    <Button onClick={handleReset} variant="outline">
+                      Reset & Resubmit Team
+                    </Button>
                   </div>
                 ) : (
                   <TeamInput onTeamSubmit={handleTeamSubmit} />
