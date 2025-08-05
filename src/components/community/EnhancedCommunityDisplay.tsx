@@ -85,21 +85,24 @@ export const EnhancedCommunityDisplay = ({ submittedTeams }: EnhancedCommunityDi
   };
 
   const PlayerCard = ({ player, isCaptain = false }: { player: Player; isCaptain?: boolean }) => (
-    <div className="relative">
+    <div className="relative flex-shrink-0">
       <div className={`
-        p-3 rounded-lg border-2 border-white/20 backdrop-blur-sm
+        p-2 rounded-lg border-2 border-white/20 backdrop-blur-sm
         ${getPositionColor(player.position)} shadow-lg
-        flex flex-col items-center text-center space-y-1 min-h-[100px]
+        flex flex-col items-center text-center space-y-1 
+        w-20 h-20 md:w-24 md:h-24 text-xs
       `}>
         {isCaptain && (
-          <Crown className="absolute -top-2 -right-2 w-5 h-5 text-yellow-400 fill-yellow-400" />
+          <Crown className="absolute -top-1 -right-1 w-3 h-3 md:w-4 md:h-4 text-yellow-400 fill-yellow-400" />
         )}
-        <div className="font-bold text-lg">
+        <div className="font-bold text-sm md:text-base">
           {player.name.split(' ').map(n => n[0]).join('')}
         </div>
-        <div className="text-xs font-semibold">{player.name}</div>
+        <div className="text-xs font-semibold truncate w-full">
+          {player.name.length > 10 ? player.name.substring(0, 8) + '..' : player.name}
+        </div>
         <div className="text-xs">{player.team}</div>
-        <Badge variant="secondary" className="text-xs">
+        <Badge variant="secondary" className="text-xs px-1 py-0">
           {player.selectionPercentage.toFixed(0)}%
         </Badge>
       </div>
@@ -153,11 +156,11 @@ export const EnhancedCommunityDisplay = ({ submittedTeams }: EnhancedCommunityDi
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="relative bg-gradient-to-b from-green-600 to-green-700 rounded-lg p-6 min-h-[400px]">
+          <div className="relative bg-gradient-to-b from-green-600 to-green-700 rounded-lg p-4 min-h-[320px] overflow-hidden">
             {/* Formation Layout */}
-            <div className="grid grid-rows-4 gap-4 h-full">
+            <div className="flex flex-col justify-between h-full gap-4">
               {/* Forwards */}
-              <div className="flex justify-center items-center gap-8">
+              <div className="flex justify-center items-center gap-4 md:gap-8">
                 {mostPopularXI.fwd.map((player, idx) => (
                   <PlayerCard 
                     key={player.id} 
@@ -168,7 +171,7 @@ export const EnhancedCommunityDisplay = ({ submittedTeams }: EnhancedCommunityDi
               </div>
               
               {/* Midfielders */}
-              <div className="flex justify-center items-center gap-4">
+              <div className="flex justify-center items-center gap-2 md:gap-4">
                 {mostPopularXI.mid.map((player, idx) => (
                   <PlayerCard 
                     key={player.id} 
@@ -179,7 +182,7 @@ export const EnhancedCommunityDisplay = ({ submittedTeams }: EnhancedCommunityDi
               </div>
               
               {/* Defenders */}
-              <div className="flex justify-center items-center gap-3">
+              <div className="flex justify-center items-center gap-2 md:gap-3">
                 {mostPopularXI.def.map((player, idx) => (
                   <PlayerCard 
                     key={player.id} 

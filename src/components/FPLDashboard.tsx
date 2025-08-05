@@ -6,6 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TeamInput } from "./team/TeamInput";
 import { EnhancedCommunityDisplay } from "./community/EnhancedCommunityDisplay";
 import { TeamConstraints } from "./team/TeamConstraints";
+import { toast } from "sonner";
+
+// Current gameweek (in a real app this would come from an API)
+const CURRENT_GAMEWEEK = 15;
 
 interface TeamSubmission {
   players: any[];
@@ -14,13 +18,30 @@ interface TeamSubmission {
 }
 
 export const FPLDashboard = () => {
-  const [currentGameweek] = useState(1);
   const [submittedTeams, setSubmittedTeams] = useState<TeamSubmission[]>([]);
-  const [hasSubmittedTeam, setHasSubmittedTeam] = useState(false);
+  const [hasSubmittedThisGameweek, setHasSubmittedThisGameweek] = useState(false);
+
+  // Check if user has already submitted for this gameweek
+  useEffect(() => {
+    const submissionKey = `gw_${CURRENT_GAMEWEEK}_submitted`;
+    const hasSubmitted = localStorage.getItem(submissionKey) === 'true';
+    setHasSubmittedThisGameweek(hasSubmitted);
+  }, []);
 
   const handleTeamSubmit = (team: TeamSubmission) => {
+    if (hasSubmittedThisGameweek) {
+      toast.error("You have already submitted a team for this gameweek!");
+      return;
+    }
+
     setSubmittedTeams([...submittedTeams, team]);
-    setHasSubmittedTeam(true);
+    
+    // Mark as submitted for this gameweek
+    const submissionKey = `gw_${CURRENT_GAMEWEEK}_submitted`;
+    localStorage.setItem(submissionKey, 'true');
+    setHasSubmittedThisGameweek(true);
+    
+    toast.success("Team submitted successfully!");
   };
 
   return (
@@ -32,13 +53,13 @@ export const FPLDashboard = () => {
             FPL Community Picks
           </h1>
           <p className="text-xl text-white/80">
-            Gameweek {currentGameweek} • Share your team and see popular picks
+            Gameweek {CURRENT_GAMEWEEK} • Share your team and see popular picks
           </p>
           <div className="flex justify-center gap-4">
             <Badge variant="secondary" className="text-lg px-4 py-2">
               Teams Submitted: {submittedTeams.length}
             </Badge>
-            {hasSubmittedTeam && (
+            {hasSubmittedThisGameweek && (
               <Badge variant="default" className="text-lg px-4 py-2">
                 ✓ Your Team Submitted
               </Badge>
@@ -58,11 +79,21 @@ export const FPLDashboard = () => {
               <CardHeader>
                 <CardTitle>Submit Your FPL Team</CardTitle>
                 <CardDescription>
-                  Upload screenshots or manually select your team to contribute to the community data
+                  {hasSubmittedThisGameweek 
+                    ? `You've already submitted your team for Gameweek ${CURRENT_GAMEWEEK}`
+                    : "Upload screenshots or manually select your team to contribute to the community data"
+                  }
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <TeamInput onTeamSubmit={handleTeamSubmit} />
+                {hasSubmittedThisGameweek ? (
+                  <div className="text-center py-8">
+                    <p className="text-lg font-medium mb-2">Team submission complete!</p>
+                    <p className="text-muted-foreground">Check out the community selections in the Popular Picks tab or wait for the next gameweek.</p>
+                  </div>
+                ) : (
+                  <TeamInput onTeamSubmit={handleTeamSubmit} />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
